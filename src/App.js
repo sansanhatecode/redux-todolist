@@ -1,25 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import { store } from './redux/store';
+import Header from './components/Header';
+import {connect} from 'react-redux'
+import TodoItems from './components/TodoItems';
+import { useRef } from 'react';
+import Footer from './components/Footer';
 
-function App() {
+function App(props) {
+  const headerRef = useRef()
+
+  const requestEdit = (id) => {
+    headerRef.current.changeUpdate(id)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>todos</h1>
+      <Header
+        ref={headerRef}
+      />
+      <TodoItems
+        requestEdit={requestEdit}
+      />
+      <Footer/>
     </div>
   );
 }
 
-export default App;
+function mapStateToProps (state){
+  return ({
+    todoList: store.getState().todoList,
+  })
+}
+
+export default connect(mapStateToProps)(App);
